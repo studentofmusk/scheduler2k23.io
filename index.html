@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="output.css">
-    <title>Scheduler 2K23</title>
+    <title>Scheduler 2K23 | Home</title>
 </head>
 <body>
     <nav class="flex items-center justify-center uppercase text-white font-bold text-center bg-orange-700 h-10 w-full ">
@@ -30,6 +30,9 @@
             </tr>
         </table>
         <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded-lg mt-3">submit</button>
+        <br>
+        <br>
+        <a href="history.html" class="underline text to-blue-800">History</a>
     </form>
 
     </div>
@@ -59,7 +62,7 @@
                 yesterday:yesterday,
                 today:today
             })
-            const hey = async ()=>{
+            const postWorkDone = async ()=>{
                 try {
                     //console.log(payload)
                     let res = await fetch("https://scheduler-2k23-api.onrender.com/api/workdone", {
@@ -84,7 +87,7 @@
                 }
 
         }
-        hey();
+        postWorkDone();
 
         })
 

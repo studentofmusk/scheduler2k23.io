@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="output.css">
+    <title>Scheduler 2K23 | History</title>
+</head>
+<body>
+    <nav class="flex items-center justify-center uppercase text-white font-bold text-center bg-orange-700 h-10 w-full ">
+        <div class="text-xl">Scheduler 2K23</div>        
+    </nav>
+    <!-- component -->
+<div class="overflow-x-scroll rounded-lg border border-gray-200 shadow-md m-5">
+    <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
+      <thead class="bg-gray-50">
+        <tr>
+            <th scope="col" class="px-6 py-4 font-medium text-gray-900">Date</th>
+            <th scope="col" class="px-6 py-4 font-medium text-gray-900">Day</th>
+            <th scope="col" class="px-24 py-4 font-medium text-gray-900">Yesterday</th>
+            <th scope="col" class="px-24 py-4 font-medium text-gray-900">Today</th>
+          
+        </tr>
+      </thead>
+      <tbody id="historybody" class="divide-y divide-gray-100 border-t border-gray-100">
+       
+        
+      </tbody>
+    </table>
+</div>
+<center>
+
+    <a href="index.html" class="text-green-700">back to Home</a>
+</center>
+  <script>
+    let history = [];
+    const fetchHistory = async ()=>{
+    let dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                try {
+
+                    let res = await fetch("https://scheduler-2k23-api.onrender.com/api/history",{
+                        method:"GET",
+                        headers:{
+                            Accept:"application/json",
+                            "Content-Type":"application/json"
+                        }
+
+                    })
+                    let response = await res.json();
+                    if(response.success){
+                        history = response.data;
+                        let tableBody = document.getElementById("historybody") 
+                        let content = ""
+                        history.forEach(data => {
+                            let DATE = new Date(data.date);
+                            content += `
+                            <tr class="hover:bg-gray-50">
+                                    <th class="gap-3 px-6 py-4 font-normal text-gray-900">
+                                        
+                                        <div class="text-sm">
+                                        <div class="font-medium text-gray-700 w-32">${data.timeline}</div>
+                                        <div class="text-gray-400 ">${(DATE.getHours() + 1 )%12 + ":" + DATE.getMinutes()} PM</div>
+                                        </div>
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        <span
+                                        class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold ${DATE.getDay()>6?"text-green-600":(DATE.getDay()>5?"text-blue-600":"text-yello-600")}"
+                                        >
+                                        <span class="h-1.5 w-1.5 rounded-full ${DATE.getDay()>6?"bg-green-600":(DATE.getDay()>5?"bg-blue-600":"bg-yello-600")}"></span>
+                                        ${dayNames[DATE.getDay()]}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 ">${data.yesterday}</td>
+                                    <td class="px-6 py-4 ">${data.today}</td>
+                                    
+                            </tr>
+                            `
+                        });
+                    tableBody.innerHTML = content;
+                
+
+                    }else{
+                        alert("Unable to Fetch");
+                        console.log(response.message)
+                    }
+                } catch (error) {
+                 alert("Somethng went wrong")   
+                 console.log(error.message);
+                }
+
+
+        }
+        
+        fetchHistory();
+        
+  </script>
+</body>
+</html>
