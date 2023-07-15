@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="output.css">
+    <title>Scheduler 2K23</title>
+</head>
+<body>
+    <nav class="flex items-center justify-center uppercase text-white font-bold text-center bg-orange-700 h-10 w-full ">
+        <div class="text-xl">Scheduler 2K23</div>        
+    </nav>
+    <div class="w-[90%] h-[70vh]  items-center md:w-[60%] mx-auto flex justify-center">
+        <form action="" id="MyForm" method="post" class=" inline">
+
+            <table class="w-full">
+                <tr class="">
+                    <td class="font-bold w-[100px]">Date</td>
+                    <td id="date"></td>
+                </tr>
+            <tr class="">
+                <td class="font-bold w-[100px]" >Yester Day</td>
+                <td><input type="text" name="yesterday" placeholder="work done?"></td>
+            </tr>
+            <tr class="">
+                <td class="font-bold w-[100px]" >Today</td>
+                <td><input type="text" name="today" placeholder="work done?"></td>
+                
+            </tr>
+        </table>
+        <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded-lg mt-3">submit</button>
+    </form>
+
+    </div>
+    <script>
+        const date = new Date();
+        const months = [
+                "January", "February", 
+                "March", "April", "May", 
+                "June", "July", "August",
+                "September", "October", 
+                "November", "December"
+            ];
+        
+        document.getElementById("date").innerText = date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
+
+
+
+        let form = document.getElementById('MyForm');
+        form.addEventListener('submit', (e)=>{
+            e.preventDefault();
+            var yesterday = document.getElementsByName('yesterday')[0].value;
+            var today = document.getElementsByName('today')[0].value;
+            var Date = date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
+            console.log(Date, yesterday, today);
+            let payload =JSON.stringify( {
+                date:Date,
+                yesterday:yesterday,
+                today:today
+            })
+            const hey = async ()=>{
+                try {
+                    //console.log(payload)
+                    let res = await fetch("https://scheduler-2k23-api.onrender.com/api/workdone", {
+                            method:"POST",
+                            body:payload,
+                            headers:{
+                                'Content-Type':"application/json"
+                            }
+                        })
+                    let response = await res.json();
+                    if(response.success){
+                        alert("Updated Successfully");
+                        location.reload();
+
+
+                    }else{
+                        alert(response.message)
+                    }
+                } catch (error) {
+                 alert("Unable to sent")   
+                 console.log(error);
+                }
+
+        }
+        hey();
+
+        })
+
+    </script>
+</body>
+</html>
